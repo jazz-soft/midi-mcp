@@ -1,4 +1,6 @@
 # midi-mcp
+[![npm](https://img.shields.io/npm/v/midi-mcp.svg)](https://www.npmjs.com/package/midi-mcp)
+
 coming soon...
 
 ### Claude for Desktop
@@ -29,3 +31,15 @@ Windows PowerShell: `code $env:AppData\Claude\claude_desktop_config.json`
   }
 }
 ```
+
+## Debugging
+Instead of the `npx` command, use:
+```json
+"midi": {
+  "command": "node",
+  "args": ["/path/to/midi-mcp"]
+}
+```
+
+### MCP Inspector
+`npx @modelcontextprotocol/inspector node /path/to/midi-mcp`

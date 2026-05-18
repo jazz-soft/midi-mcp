@@ -1,6 +1,6 @@
 {
   "name": "midi-mcp",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "coming soon...",
   "main": "index.js",
   "bin": {
@@ -17,7 +17,7 @@
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.29.0",
     "jzz": "^1.9.6",
-    "zod": "^4.3.6"
+    "zod": "^4.4.3"
   },
   "repository": {
     "type": "git",
