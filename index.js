@@ -23,28 +23,53 @@ server.registerTool(
   { description: "Get the list of MIDI-In ports", inputSchema: {} },
   list_midi_in
 );
+server.registerTool(
+  "open-midi-out",
+  { description: "Open MIDI-Out port", inputSchema: { port: z.string().optional().describe("Port name") } },
+  open_midi_out
+);
 
 var START_TIME;
+var MIDI_OUT = {};
 
-async function init() {
+async function _init() {
   if (!START_TIME) {
     await JZZ();
     START_TIME = new Date().getTime();
   }
 }
 async function get_midi_time() {
-  await init();
+  await _init();
   return { content: [ { type: 'text', text: new Date().getTime() - START_TIME } ] };
 }
 async function list_midi_out() {
-  await init();
+  await _init();
   const result = await JZZ().info().outputs.map(x => x.name);
   return { content: [ { type: 'text', text: JSON.stringify(result) } ] };
 }
 async function list_midi_in() {
-  await init();
+  await _init();
   const result = await JZZ().info().inputs.map(x => x.name);
   return { content: [ { type: 'text', text: JSON.stringify(result) } ] };
+}
+async function open_midi_out({ port }) {
+  try {
+    var p = await _open_midi_out(port);
+    return { content: [ { type: 'text', text: p.name() } ] };
+  }
+  catch (err) {
+    return {
+      content: [{ type: "text", text: `Error: ${err.message}` }],
+      isError: true,
+    };
+  }
+}
+async function _open_midi_out(name) {
+  if (MIDI_OUT[name]) return MIDI_OUT[name];
+  await _init();
+  var port = await JZZ().openMidiOut(name);
+  MIDI_OUT[name] = port;
+  return port;
 }
 
 if (require.main === module) {
@@ -60,6 +85,7 @@ else {
     name, version,
     get_midi_time,
     list_midi_out,
-    list_midi_in
+    list_midi_in,
+    open_midi_out
   };
 }
