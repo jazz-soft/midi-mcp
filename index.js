@@ -28,6 +28,21 @@ server.registerTool(
   { description: "Open MIDI-Out port", inputSchema: { port: z.string().optional().describe("Port name") } },
   open_midi_out
 );
+server.registerTool(
+  "send-midi",
+  { description: "Send messages to MIDI-Out port",
+    inputSchema: {
+      port: z.string().optional().describe("Port name"),
+      messages: z.array(
+        z.object({
+          timestamp: z.number().optional().describe("Timestamp (see MIDI time) or none to play immediately"),
+          bytes: z.array(z.number().int().min(0).max(255)).describe("Raw MIDI bytes e.g. [144, 60, 80]")
+        })
+      ).describe("MIDI messages to send")
+    }
+  },
+  send_midi
+);
 
 var START_TIME;
 var MIDI_OUT = {};
@@ -40,7 +55,7 @@ async function _init() {
 }
 async function get_midi_time() {
   await _init();
-  return { content: [ { type: 'text', text: new Date().getTime() - START_TIME } ] };
+  return { content: [ { type: 'text', text: String(new Date().getTime() - START_TIME) } ] };
 }
 async function list_midi_out() {
   await _init();
@@ -59,7 +74,7 @@ async function open_midi_out({ port }) {
   }
   catch (err) {
     return {
-      content: [{ type: "text", text: `Error: ${err.message}` }],
+      content: [{ type: 'text', text: `Error: ${err.message}` }],
       isError: true,
     };
   }
@@ -70,6 +85,19 @@ async function _open_midi_out(name) {
   var port = await JZZ().openMidiOut(name);
   MIDI_OUT[name] = port;
   return port;
+}
+async function send_midi({ port, messages }) {
+  try {
+    var p = await _open_midi_out(port);
+    // console.error(messages);
+    return { content: [{ type: 'text', text: 'OK' }] };
+  }
+  catch (err) {
+    return {
+      content: [{ type: 'text', text: `Error: ${err.message}` }],
+      isError: true,
+    };
+  }
 }
 
 if (require.main === module) {
