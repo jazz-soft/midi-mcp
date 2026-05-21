@@ -24,12 +24,12 @@ server.registerTool(
   list_midi_in
 );
 server.registerTool(
-  "open-midi-out",
+  "open_midi_out",
   { description: "Open MIDI-Out port", inputSchema: { port: z.string().optional().describe("Port name") } },
   open_midi_out
 );
 server.registerTool(
-  "send-midi",
+  "send_midi",
   { description: "Send messages to MIDI-Out port",
     inputSchema: {
       port: z.string().optional().describe("Port name"),
@@ -46,6 +46,8 @@ server.registerTool(
 
 var START_TIME;
 var MIDI_OUT = {};
+var MSG = [];
+var PLAYING;
 
 async function _init() {
   if (!START_TIME) {
@@ -89,7 +91,9 @@ async function _open_midi_out(name) {
 async function send_midi({ port, messages }) {
   try {
     var p = await _open_midi_out(port);
-    // console.error(messages);
+    for (var msg of messages) MSG.push({ p: port, t: msg.timestamp || 0, m: msg.bytes });
+    MSG.sort((a, b) => a.t - b.t);
+    if (!PLAYING) _tick();
     return { content: [{ type: 'text', text: 'OK' }] };
   }
   catch (err) {
@@ -98,6 +102,17 @@ async function send_midi({ port, messages }) {
       isError: true,
     };
   }
+}
+function _tick() {
+  var t = new Date().getTime() - START_TIME;
+  for (var n = 0; n < MSG.length; n++) {
+    var m = MSG[n]
+    if (m.t > t) break;
+    if (MIDI_OUT[m.p]) MIDI_OUT[m.p].send(m.m);
+  }
+  if (n) MSG.splice(0, n);
+  PLAYING = !!MSG.length;
+  if (PLAYING) setImmediate(_tick);
 }
 
 if (require.main === module) {
@@ -114,6 +129,7 @@ else {
     get_midi_time,
     list_midi_out,
     list_midi_in,
-    open_midi_out
+    open_midi_out,
+    send_midi
   };
 }
