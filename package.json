@@ -15,9 +15,9 @@
   ],
   "author": "jazz-soft (https://jazz-soft.net/)",
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.30.0",
+    "@modelcontextprotocol/sdk": "^1.32.2",
     "jzz": "^1.9.6",
-    "zod": "^4.4.3"
+    "zod": "^4.6.7"
   },
   "repository": {
     "type": "git",

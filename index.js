@@ -90,8 +90,15 @@ async function _open_midi_out(name) {
 }
 async function send_midi({ port, messages }) {
   try {
-    var p = await _open_midi_out(port);
-    for (var msg of messages) MSG.push({ p: port, t: msg.timestamp || 0, m: msg.bytes });
+    await _open_midi_out(port);
+    var t = new Date().getTime() - START_TIME;
+    for (var msg of messages) {
+      if (msg.timestamp < t) {
+        START_TIME += t - msg.timestamp;
+        t = msg.timestamp;
+      }
+      MSG.push({ p: port, t: msg.timestamp || 0, m: msg.bytes });
+    }
     MSG.sort((a, b) => a.t - b.t);
     if (!PLAYING) _tick();
     return { content: [{ type: 'text', text: 'OK' }] };
