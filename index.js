@@ -5,7 +5,7 @@ const { z } = require("zod");
 const JZZ = require('jzz');
 
 const name = 'midi-mcp';
-const version = '0.0.3';
+const version = '0.0.4';
 const server = new McpServer({ name, version });
 
 server.registerTool(

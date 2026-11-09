@@ -1,8 +1,19 @@
 # midi-mcp
 [![npm](https://img.shields.io/npm/v/midi-mcp.svg)](https://www.npmjs.com/package/midi-mcp)
 
-coming soon...
+MIDI support for AI agents
 
+## Example prompts
+```
+> List MIDI devices connected to my laptop
+
+> Play a C-major scale on violin
+
+> Play "Happy Borthday"
+```
+We are still working on the new features/usecases and will appreciate your feedback...
+
+## Setup
 ### Claude for Desktop
 MacOS/Linux: `code ~/Library/Application\ Support/Claude/claude_desktop_config.json`  
 Windows PowerShell: `code $env:AppData\Claude\claude_desktop_config.json`

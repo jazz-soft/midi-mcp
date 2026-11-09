@@ -1,7 +1,7 @@
 {
   "name": "midi-mcp",
-  "version": "0.0.3",
-  "description": "coming soon...",
+  "version": "0.0.4",
+  "description": "MIDI support for AI agents",
   "main": "index.js",
   "bin": {
     "midi-mcp": "index.js"
