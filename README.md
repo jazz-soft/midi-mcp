@@ -9,7 +9,7 @@ MIDI support for AI agents
 
 > Play a C-major scale on violin
 
-> Play "Happy Borthday"
+> Play "Happy Birthday"
 ```
 We are still working on the new features/usecases and will appreciate your feedback...
 
